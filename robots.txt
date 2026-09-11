@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://monsur3015-maker.github.io/Youmovie/sitemap.xml
