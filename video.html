@@ -1,0 +1,1463 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+<meta charset="UTF-8">
+
+<meta name="viewport"
+      content="width=device-width, initial-scale=1.0">
+
+<title>YouMovie Video</title>
+
+<link rel="stylesheet"
+      href="style.css">
+
+<style>
+
+.watch-page{
+    max-width:1000px;
+    margin:auto;
+    padding:15px;
+    padding-bottom:110px;
+}
+
+.video-player{
+    width:100%;
+    background:#000;
+    border-radius:12px;
+    overflow:hidden;
+}
+
+.video-player video{
+    width:100%;
+    display:block;
+    max-height:70vh;
+}
+
+.back-button{
+    display:inline-block;
+    margin-bottom:15px;
+    padding:9px 15px;
+    background:#222;
+    border-radius:8px;
+    cursor:pointer;
+}
+
+.watch-title{
+    margin-top:18px;
+}
+
+.watch-title h1{
+    font-size:22px;
+    margin-bottom:8px;
+}
+
+.watch-meta{
+    color:#aaa;
+    font-size:14px;
+}
+
+.action-row{
+    display:flex;
+    gap:10px;
+    flex-wrap:wrap;
+    margin-top:16px;
+}
+
+.action-btn{
+    border:0;
+    background:#222;
+    color:white;
+    padding:10px 15px;
+    border-radius:20px;
+    cursor:pointer;
+    font-size:14px;
+}
+
+.action-btn:hover{
+    background:#333;
+}
+
+.action-btn.active{
+    background:#333;
+}
+
+.watch-description{
+    margin-top:15px;
+    padding:15px;
+    background:#181818;
+    border-radius:10px;
+    line-height:1.6;
+    color:#ddd;
+}
+
+.comments-section{
+    margin-top:25px;
+}
+
+.comments-section h2{
+    margin-bottom:15px;
+}
+
+.comment-box{
+    display:flex;
+    gap:8px;
+    margin-bottom:20px;
+}
+
+.comment-box input{
+    flex:1;
+    padding:12px;
+    border:0;
+    outline:none;
+    border-radius:8px;
+    background:#222;
+    color:white;
+}
+
+.comment-box button{
+    border:0;
+    padding:10px 15px;
+    border-radius:8px;
+    background:#ff0033;
+    color:white;
+    cursor:pointer;
+}
+
+.comment{
+    background:#181818;
+    padding:12px;
+    border-radius:10px;
+    margin-bottom:10px;
+}
+
+.comment-user{
+    font-size:13px;
+    color:#aaa;
+    margin-bottom:5px;
+}
+
+.comment-text{
+    color:#eee;
+}
+
+.login-note{
+    color:#aaa;
+    padding:12px;
+    background:#181818;
+    border-radius:8px;
+}
+
+.error-message{
+    color:#ff5555;
+    padding:15px;
+}
+
+</style>
+
+</head>
+
+
+<body>
+
+
+<header>
+
+<div class="logo"
+     onclick="location.href='index.html'">
+
+▶ YouMovie
+
+</div>
+
+</header>
+
+
+
+<main class="watch-page">
+
+
+<div class="back-button"
+     onclick="history.back()">
+
+← Back
+
+</div>
+
+
+
+<!-- VIDEO -->
+
+<div class="video-player">
+
+<video
+    id="videoPlayer"
+    controls
+    playsinline
+    preload="metadata">
+
+</video>
+
+</div>
+
+
+
+<!-- TITLE -->
+
+<div class="watch-title">
+
+<h1 id="videoTitle">
+Loading...
+</h1>
+
+<div id="videoMeta"
+     class="watch-meta">
+
+Loading...
+
+</div>
+
+</div>
+
+
+
+<!-- ACTION BUTTONS -->
+
+<div class="action-row">
+
+
+<button
+    id="likeButton"
+    class="action-btn">
+
+👍 Like <span id="likeCount">0</span>
+
+</button>
+
+
+<button
+    id="dislikeButton"
+    class="action-btn">
+
+👎 Dislike
+
+</button>
+
+
+<button
+    id="shareButton"
+    class="action-btn">
+
+↗ Share
+
+</button>
+
+
+<button
+    id="saveButton"
+    class="action-btn">
+
+🔖 Save
+
+</button>
+
+
+</div>
+
+
+
+<!-- DESCRIPTION -->
+
+<div
+    id="videoDescription"
+    class="watch-description">
+
+Loading description...
+
+</div>
+
+
+
+<!-- COMMENTS -->
+
+<section class="comments-section">
+
+<h2>
+Comments
+</h2>
+
+
+<div id="commentArea">
+
+</div>
+
+
+<div id="commentsList">
+
+<p>
+Loading comments...
+</p>
+
+</div>
+
+</section>
+
+
+</main>
+
+
+
+<!-- BOTTOM NAV -->
+
+<nav class="bottom-nav">
+
+
+<div
+    class="nav-item active"
+    onclick="location.href='index.html'">
+
+<span>⌂</span>
+
+Home
+
+</div>
+
+
+
+<div
+    class="nav-item"
+    onclick="location.href='shorts.html'">
+
+<span>▣</span>
+
+Shorts
+
+</div>
+
+
+
+<div
+    class="nav-item"
+    onclick="location.href='upload.html'">
+
+<span>＋</span>
+
+Create
+
+</div>
+
+
+
+<div class="nav-item">
+
+<span>▤</span>
+
+Subscriptions
+
+</div>
+
+
+
+<div
+    class="nav-item"
+    onclick="location.href='account.html'">
+
+<span>●</span>
+
+You
+
+</div>
+
+
+</nav>
+
+
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2">
+</script>
+
+
+
+<script>
+
+
+/* =========================
+SUPABASE
+========================= */
+
+
+const SUPABASE_URL =
+"https://ajanpecdofburxsimyjt.supabase.co";
+
+
+const SUPABASE_PUBLISHABLE_KEY =
+"sb_publishable_fysaC9xU6_NQgAsnjib_qw_BMbVRftN";
+
+
+const supabaseClient =
+window.supabase.createClient(
+    SUPABASE_URL,
+    SUPABASE_PUBLISHABLE_KEY
+);
+
+
+
+/* =========================
+ELEMENTS
+========================= */
+
+
+const videoPlayer =
+document.getElementById(
+    "videoPlayer"
+);
+
+
+const videoTitle =
+document.getElementById(
+    "videoTitle"
+);
+
+
+const videoMeta =
+document.getElementById(
+    "videoMeta"
+);
+
+
+const videoDescription =
+document.getElementById(
+    "videoDescription"
+);
+
+
+const likeButton =
+document.getElementById(
+    "likeButton"
+);
+
+
+const likeCount =
+document.getElementById(
+    "likeCount"
+);
+
+
+const dislikeButton =
+document.getElementById(
+    "dislikeButton"
+);
+
+
+const shareButton =
+document.getElementById(
+    "shareButton"
+);
+
+
+const saveButton =
+document.getElementById(
+    "saveButton"
+);
+
+
+const commentArea =
+document.getElementById(
+    "commentArea"
+);
+
+
+const commentsList =
+document.getElementById(
+    "commentsList"
+);
+
+
+
+/* =========================
+SELECTED VIDEO
+========================= */
+
+
+const videoId =
+localStorage.getItem(
+    "selectedVideoId"
+);
+
+
+let currentVideo = null;
+
+let currentUser = null;
+
+
+
+/* =========================
+GET USER
+========================= */
+
+
+async function getCurrentUser(){
+
+const {
+    data
+} =
+await supabaseClient
+.auth
+.getUser();
+
+currentUser =
+data.user || null;
+
+}
+
+
+
+/* =========================
+LOAD VIDEO
+========================= */
+
+
+async function loadVideo(){
+
+
+if(!videoId){
+
+videoTitle.textContent =
+"Video not selected";
+
+return;
+
+}
+
+
+
+const {
+    data,
+    error
+} =
+await supabaseClient
+
+.from("videos")
+
+.select("*")
+
+.eq(
+    "id",
+    videoId
+)
+
+.maybeSingle();
+
+
+
+if(error){
+
+videoTitle.textContent =
+"Failed to load video";
+
+videoDescription.innerHTML =
+`
+<div class="error-message">
+${escapeHTML(error.message)}
+</div>
+`;
+
+return;
+
+}
+
+
+
+if(!data){
+
+videoTitle.textContent =
+"Video not found";
+
+return;
+
+}
+
+
+
+currentVideo =
+data;
+
+
+
+/* VIDEO */
+
+videoPlayer.src =
+data.video_url;
+
+
+
+/* TITLE */
+
+videoTitle.textContent =
+data.title ||
+"Untitled Video";
+
+
+
+/* META */
+
+videoMeta.textContent =
+
+(data.category || "Video")
+
++ " • "
+
++ (data.views || 0)
+
++ " views";
+
+
+
+/* DESCRIPTION */
+
+videoDescription.textContent =
+data.description ||
+"No description available.";
+
+
+
+}
+
+
+
+/* =========================
+LOAD LIKE COUNT
+========================= */
+
+
+async function loadLikes(){
+
+
+const {
+    count,
+    error
+} =
+await supabaseClient
+
+.from("video_likes")
+
+.select(
+    "*",
+    {
+        count:"exact",
+        head:true
+    }
+)
+
+.eq(
+    "video_id",
+    videoId
+);
+
+
+
+if(!error){
+
+likeCount.textContent =
+count || 0;
+
+}
+
+}
+
+
+
+/* =========================
+CHECK USER LIKE
+========================= */
+
+
+async function checkLike(){
+
+
+if(!currentUser){
+
+return;
+
+}
+
+
+
+const {
+    data
+} =
+await supabaseClient
+
+.from("video_likes")
+
+.select("id")
+
+.eq(
+    "video_id",
+    videoId
+)
+
+.eq(
+    "user_id",
+    currentUser.id
+)
+
+.maybeSingle();
+
+
+
+if(data){
+
+likeButton.classList.add(
+    "active"
+);
+
+}
+
+}
+
+
+
+/* =========================
+LIKE
+========================= */
+
+
+likeButton.addEventListener(
+"click",
+async function(){
+
+
+if(!currentUser){
+
+alert(
+"Please login first."
+);
+
+return;
+
+}
+
+
+
+const {
+    data
+} =
+await supabaseClient
+
+.from("video_likes")
+
+.select("id")
+
+.eq(
+    "video_id",
+    videoId
+)
+
+.eq(
+    "user_id",
+    currentUser.id
+)
+
+.maybeSingle();
+
+
+
+if(data){
+
+
+await supabaseClient
+
+.from("video_likes")
+
+.delete()
+
+.eq(
+    "id",
+    data.id
+);
+
+
+likeButton.classList.remove(
+    "active"
+);
+
+
+}else{
+
+
+await supabaseClient
+
+.from("video_likes")
+
+.insert({
+
+video_id:videoId,
+
+user_id:currentUser.id
+
+});
+
+
+likeButton.classList.add(
+    "active"
+);
+
+}
+
+
+
+loadLikes();
+
+});
+
+
+
+/* =========================
+DISLIKE
+========================= */
+
+
+dislikeButton.addEventListener(
+"click",
+function(){
+
+if(!currentUser){
+
+alert(
+"Please login first."
+);
+
+return;
+
+}
+
+dislikeButton.classList.toggle(
+    "active"
+);
+
+});
+
+
+
+/* =========================
+SHARE
+========================= */
+
+
+shareButton.addEventListener(
+"click",
+async function(){
+
+
+const shareUrl =
+window.location.href;
+
+
+
+if(
+navigator.share
+){
+
+try{
+
+await navigator.share({
+
+title:
+currentVideo
+?
+currentVideo.title
+:
+"YouMovie",
+
+url:
+shareUrl
+
+});
+
+}catch(error){}
+
+}else{
+
+
+try{
+
+await navigator.clipboard.writeText(
+    shareUrl
+);
+
+alert(
+"Video link copied!"
+);
+
+}catch(error){
+
+alert(
+shareUrl
+);
+
+}
+
+}
+
+});
+
+
+
+/* =========================
+SAVE
+========================= */
+
+
+async function checkSaved(){
+
+
+if(!currentUser){
+
+return;
+
+}
+
+
+
+const {
+    data
+} =
+await supabaseClient
+
+.from("watch_later")
+
+.select("id")
+
+.eq(
+    "video_id",
+    videoId
+)
+
+.eq(
+    "user_id",
+    currentUser.id
+)
+
+.maybeSingle();
+
+
+
+if(data){
+
+saveButton.classList.add(
+    "active"
+);
+
+saveButton.innerHTML =
+"✓ Saved";
+
+}
+
+}
+
+
+
+/* SAVE BUTTON */
+
+
+saveButton.addEventListener(
+"click",
+async function(){
+
+
+if(!currentUser){
+
+alert(
+"Please login first."
+);
+
+return;
+
+}
+
+
+
+const {
+    data
+} =
+await supabaseClient
+
+.from("watch_later")
+
+.select("id")
+
+.eq(
+    "video_id",
+    videoId
+)
+
+.eq(
+    "user_id",
+    currentUser.id
+)
+
+.maybeSingle();
+
+
+
+if(data){
+
+
+await supabaseClient
+
+.from("watch_later")
+
+.delete()
+
+.eq(
+    "id",
+    data.id
+);
+
+
+saveButton.classList.remove(
+    "active"
+);
+
+saveButton.innerHTML =
+"🔖 Save";
+
+
+}else{
+
+
+await supabaseClient
+
+.from("watch_later")
+
+.insert({
+
+video_id:videoId,
+
+user_id:currentUser.id
+
+});
+
+
+saveButton.classList.add(
+    "active"
+);
+
+saveButton.innerHTML =
+"✓ Saved";
+
+}
+
+});
+
+
+
+/* =========================
+COMMENT AREA
+========================= */
+
+
+function showCommentBox(){
+
+
+if(!currentUser){
+
+commentArea.innerHTML = `
+
+<div class="login-note">
+
+Login to write a comment.
+
+</div>
+
+`;
+
+return;
+
+}
+
+
+
+commentArea.innerHTML = `
+
+<div class="comment-box">
+
+<input
+    id="commentInput"
+    type="text"
+    placeholder="Write a comment..."
+    maxlength="500">
+
+<button
+    id="commentButton">
+
+Post
+
+</button>
+
+</div>
+
+`;
+
+
+document
+.getElementById("commentButton")
+.addEventListener(
+    "click",
+    addComment
+);
+
+}
+
+
+
+/* =========================
+ADD COMMENT
+========================= */
+
+
+async function addComment(){
+
+
+const input =
+document.getElementById(
+    "commentInput"
+);
+
+
+const text =
+input.value.trim();
+
+
+
+if(!text){
+
+return;
+
+}
+
+
+
+const {
+    error
+} =
+await supabaseClient
+
+.from("video_comments")
+
+.insert({
+
+video_id:videoId,
+
+user_id:currentUser.id,
+
+comment:text
+
+});
+
+
+
+if(error){
+
+alert(
+"Comment failed: " +
+error.message
+);
+
+return;
+
+}
+
+
+
+input.value =
+"";
+
+
+loadComments();
+
+}
+
+
+
+/* =========================
+LOAD COMMENTS
+========================= */
+
+
+async function loadComments(){
+
+
+const {
+    data,
+    error
+} =
+await supabaseClient
+
+.from("video_comments")
+
+.select("*")
+
+.eq(
+    "video_id",
+    videoId
+)
+
+.order(
+    "created_at",
+    {
+        ascending:false
+    }
+);
+
+
+
+if(error){
+
+commentsList.innerHTML = `
+
+<p class="error-message">
+
+${escapeHTML(
+    error.message
+)}
+
+</p>
+
+`;
+
+return;
+
+}
+
+
+
+if(
+!data ||
+data.length === 0
+){
+
+commentsList.innerHTML = `
+
+<p>
+
+No comments yet.
+
+</p>
+
+`;
+
+return;
+
+}
+
+
+
+commentsList.innerHTML =
+"";
+
+
+
+data.forEach(
+comment => {
+
+
+const div =
+document.createElement(
+    "div"
+);
+
+
+div.className =
+"comment";
+
+
+div.innerHTML = `
+
+<div class="comment-user">
+
+User
+
+</div>
+
+<div class="comment-text">
+
+${escapeHTML(
+    comment.comment
+)}
+
+</div>
+
+`;
+
+
+commentsList.appendChild(
+    div
+);
+
+});
+
+}
+
+
+
+/* =========================
+VIEW COUNT
+========================= */
+
+
+videoPlayer.addEventListener(
+"play",
+async function(){
+
+if(!videoId){
+
+return;
+
+}
+
+
+const {
+    data
+} =
+await supabaseClient
+
+.from("videos")
+
+.select("views")
+
+.eq(
+    "id",
+    videoId
+)
+
+.maybeSingle();
+
+
+
+if(!data){
+
+return;
+
+}
+
+
+
+const newViews =
+(data.views || 0) + 1;
+
+
+
+await supabaseClient
+
+.from("videos")
+
+.update({
+
+views:newViews
+
+})
+
+.eq(
+    "id",
+    videoId
+);
+
+
+
+videoMeta.textContent =
+
+(currentVideo.category || "Video")
+
++ " • "
+
++ newViews
+
++ " views";
+
+
+
+},
+{
+    once:true
+}
+);
+
+
+
+/* =========================
+SECURITY
+========================= */
+
+
+function escapeHTML(text){
+
+return String(
+    text ?? ""
+)
+
+.replace(
+    /&/g,
+    "&amp;"
+)
+
+.replace(
+    /</g,
+    "&lt;"
+)
+
+.replace(
+    />/g,
+    "&gt;"
+)
+
+.replace(
+    /"/g,
+    "&quot;"
+)
+
+.replace(
+    /'/g,
+    "&#039;"
+);
+
+}
+
+
+
+/* =========================
+START
+========================= */
+
+
+async function start(){
+
+await getCurrentUser();
+
+await loadVideo();
+
+await loadLikes();
+
+await checkLike();
+
+await checkSaved();
+
+showCommentBox();
+
+await loadComments();
+
+}
+
+
+
+start();
+
+
+</script>
+
+
+</body>
+
+</html>

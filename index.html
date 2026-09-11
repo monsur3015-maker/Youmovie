@@ -1,0 +1,870 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1.0">
+
+    <title>YouMovie</title>
+
+    <link rel="stylesheet"
+          href="style.css">
+
+</head>
+
+
+<body>
+
+
+<header>
+
+    <div class="logo"
+         onclick="location.href='index.html'">
+
+        ▶ YouMovie
+
+    </div>
+
+
+    <div class="search-box">
+
+        <input
+            id="searchInput"
+            type="text"
+            placeholder="Search">
+
+        <button id="searchButton">
+            🔍
+        </button>
+
+    </div>
+
+</header>
+
+
+
+<main>
+
+
+    <!-- CATEGORIES -->
+
+    <section class="categories">
+
+        <button
+            class="category active"
+            data-category="all">
+
+            All
+
+        </button>
+
+
+        <button
+            class="category"
+            data-category="music">
+
+            Music
+
+        </button>
+
+
+        <button
+            class="category"
+            data-category="gaming">
+
+            Gaming
+
+        </button>
+
+
+        <button
+            class="category"
+            data-category="education">
+
+            Education
+
+        </button>
+
+
+        <button
+            class="category"
+            data-category="comedy">
+
+            Comedy
+
+        </button>
+
+
+        <button
+            class="category"
+            data-category="sports">
+
+            Sports
+
+        </button>
+
+
+        <button
+            class="category"
+            data-category="news">
+
+            News
+
+        </button>
+
+
+        <button
+            class="category"
+            data-category="technology">
+
+            Technology
+
+        </button>
+
+
+        <button
+            class="category"
+            data-category="entertainment">
+
+            Entertainment
+
+        </button>
+
+    </section>
+
+
+
+    <!-- LATEST VIDEOS -->
+
+    <section>
+
+        <h2>
+            Latest Videos
+        </h2>
+
+
+        <div
+            id="videoGrid"
+            class="video-grid">
+
+            <p id="loadingMessage">
+                Loading videos...
+            </p>
+
+        </div>
+
+    </section>
+
+
+</main>
+
+
+
+<!-- BOTTOM NAVIGATION -->
+
+<nav class="bottom-nav">
+
+
+    <div
+        class="nav-item active"
+        onclick="location.href='index.html'">
+
+        <span>⌂</span>
+
+        Home
+
+    </div>
+
+
+
+    <div
+        class="nav-item"
+        onclick="location.href='shorts.html'">
+
+        <span>▣</span>
+
+        Shorts
+
+    </div>
+
+
+
+    <div
+        class="nav-item"
+        onclick="location.href='upload.html'">
+
+        <span>＋</span>
+
+        Create
+
+    </div>
+
+
+
+    <div class="nav-item">
+
+        <span>▤</span>
+
+        Subscriptions
+
+    </div>
+
+
+
+    <div
+        class="nav-item"
+        onclick="location.href='account.html'">
+
+        <span>●</span>
+
+        You
+
+    </div>
+
+
+</nav>
+
+
+
+<!-- SUPABASE -->
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2">
+</script>
+
+
+
+<script>
+
+
+/* =========================
+   SUPABASE
+========================= */
+
+
+const SUPABASE_URL =
+    "https://ajanpecdofburxsimyjt.supabase.co";
+
+
+const SUPABASE_PUBLISHABLE_KEY =
+    "sb_publishable_fysaC9xU6_NQgAsnjib_qw_BMbVRftN";
+
+
+const supabaseClient =
+    window.supabase.createClient(
+        SUPABASE_URL,
+        SUPABASE_PUBLISHABLE_KEY
+    );
+
+
+
+/* =========================
+   ELEMENTS
+========================= */
+
+
+const videoGrid =
+    document.getElementById(
+        "videoGrid"
+    );
+
+
+const searchInput =
+    document.getElementById(
+        "searchInput"
+    );
+
+
+const searchButton =
+    document.getElementById(
+        "searchButton"
+    );
+
+
+
+/* =========================
+   VARIABLES
+========================= */
+
+
+let allVideos = [];
+
+let currentCategory = "all";
+
+
+
+/* =========================
+   LOAD VIDEOS
+========================= */
+
+
+async function loadVideos() {
+
+
+    videoGrid.innerHTML = `
+        <p>
+            Loading videos...
+        </p>
+    `;
+
+
+    try {
+
+
+        const {
+            data,
+            error
+        } = await supabaseClient
+
+            .from("videos")
+
+            .select("*")
+
+            .order(
+                "created_at",
+                {
+                    ascending: false
+                }
+            );
+
+
+
+        console.log(
+            "VIDEOS:",
+            data
+        );
+
+
+        console.log(
+            "ERROR:",
+            error
+        );
+
+
+
+        /* DATABASE ERROR */
+
+        if (error) {
+
+            videoGrid.innerHTML = `
+
+                <div style="
+                    padding:20px;
+                    color:#ff5555;
+                    background:#202020;
+                    border-radius:10px;
+                ">
+
+                    <h3>
+                        Failed to load videos
+                    </h3>
+
+                    <p>
+                        ${escapeHTML(
+                            error.message
+                        )}
+                    </p>
+
+                </div>
+
+            `;
+
+            return;
+
+        }
+
+
+
+        /* NO VIDEOS */
+
+        if (
+            !data ||
+            data.length === 0
+        ) {
+
+            videoGrid.innerHTML = `
+
+                <div style="
+                    padding:20px;
+                    color:#ffd43b;
+                ">
+
+                    <h3>
+                        No videos found
+                    </h3>
+
+                    <p>
+                        Supabase database এ এখনো
+                        কোনো video পাওয়া যায়নি।
+                    </p>
+
+                </div>
+
+            `;
+
+            return;
+
+        }
+
+
+
+        /* SAVE VIDEOS */
+
+        allVideos = data;
+
+
+
+        /* DISPLAY */
+
+        displayVideos(
+            allVideos
+        );
+
+
+    }
+
+    catch (error) {
+
+
+        console.error(
+            error
+        );
+
+
+        videoGrid.innerHTML = `
+
+            <div style="
+                padding:20px;
+                color:#ff5555;
+            ">
+
+                <h3>
+                    Something went wrong
+                </h3>
+
+                <p>
+                    ${escapeHTML(
+                        error.message
+                    )}
+                </p>
+
+            </div>
+
+        `;
+
+    }
+
+}
+
+
+
+/* =========================
+   DISPLAY VIDEOS
+========================= */
+
+
+function displayVideos(
+    videos
+) {
+
+
+    videoGrid.innerHTML = "";
+
+
+    if (
+        !videos ||
+        videos.length === 0
+    ) {
+
+        videoGrid.innerHTML = `
+
+            <p>
+                No videos found.
+            </p>
+
+        `;
+
+        return;
+
+    }
+
+
+
+    videos.forEach(
+        video => {
+
+
+            const card =
+                document.createElement(
+                    "div"
+                );
+
+
+            card.className =
+                "video-card";
+
+
+
+            /* THUMBNAIL */
+
+            const thumbnail =
+                video.thumbnail_url;
+
+
+
+            card.innerHTML = `
+
+                <div class="video-thumbnail">
+
+                    ${
+                        thumbnail
+
+                        ?
+
+                        `
+                        <img
+                            src="${escapeHTML(
+                                thumbnail
+                            )}"
+                            alt="${escapeHTML(
+                                video.title
+                            )}"
+                            loading="lazy"
+                            onerror="
+                                this.style.display='none';
+                                this.parentElement.innerHTML +=
+                                '<div style=\\'display:flex;align-items:center;justify-content:center;height:100%;color:#aaa;\\'>No Thumbnail</div>';
+                            "
+                        >
+                        `
+
+                        :
+
+                        `
+                        <div style="
+                            display:flex;
+                            align-items:center;
+                            justify-content:center;
+                            height:100%;
+                            color:#aaa;
+                        ">
+
+                            No Thumbnail
+
+                        </div>
+                        `
+                    }
+
+                </div>
+
+
+
+                <div class="video-info">
+
+                    <h3>
+
+                        ${escapeHTML(
+                            video.title
+                        )}
+
+                    </h3>
+
+
+                    <p>
+
+                        ${escapeHTML(
+                            video.category || ""
+                        )}
+
+                        •
+
+                        ${video.views || 0}
+
+                        views
+
+                    </p>
+
+                </div>
+
+            `;
+
+
+
+            /* OPEN VIDEO */
+
+            card.addEventListener(
+                "click",
+                function () {
+
+
+                    localStorage.setItem(
+                        "selectedVideoId",
+                        video.id
+                    );
+
+
+                    location.href =
+                        "video.html";
+
+                }
+            );
+
+
+
+            videoGrid.appendChild(
+                card
+            );
+
+        }
+    );
+
+}
+
+
+
+/* =========================
+   SEARCH
+========================= */
+
+
+function searchVideos() {
+
+
+    const query =
+        searchInput.value
+            .trim()
+            .toLowerCase();
+
+
+
+    const filtered =
+        allVideos.filter(
+            video => {
+
+
+                const title =
+                    (
+                        video.title || ""
+                    )
+                    .toLowerCase();
+
+
+                const description =
+                    (
+                        video.description || ""
+                    )
+                    .toLowerCase();
+
+
+                const category =
+                    (
+                        video.category || ""
+                    )
+                    .toLowerCase();
+
+
+
+                const matchesSearch =
+
+                    !query ||
+
+                    title.includes(
+                        query
+                    ) ||
+
+                    description.includes(
+                        query
+                    ) ||
+
+                    category.includes(
+                        query
+                    );
+
+
+
+                const matchesCategory =
+
+                    currentCategory ===
+                    "all"
+
+                    ||
+
+                    category ===
+                    currentCategory;
+
+
+
+                return (
+                    matchesSearch &&
+                    matchesCategory
+                );
+
+            }
+        );
+
+
+
+    displayVideos(
+        filtered
+    );
+
+}
+
+
+
+/* SEARCH BUTTON */
+
+
+searchButton.addEventListener(
+    "click",
+    searchVideos
+);
+
+
+
+/* LIVE SEARCH */
+
+
+searchInput.addEventListener(
+    "input",
+    searchVideos
+);
+
+
+
+/* ENTER KEY */
+
+
+searchInput.addEventListener(
+    "keydown",
+    function(event) {
+
+        if (
+            event.key === "Enter"
+        ) {
+
+            searchVideos();
+
+        }
+
+    }
+);
+
+
+
+/* =========================
+   CATEGORY
+========================= */
+
+
+document
+    .querySelectorAll(
+        ".category"
+    )
+    .forEach(
+        button => {
+
+
+            button.addEventListener(
+                "click",
+                function() {
+
+
+                    document
+                        .querySelectorAll(
+                            ".category"
+                        )
+                        .forEach(
+                            btn => {
+
+                                btn.classList
+                                    .remove(
+                                        "active"
+                                    );
+
+                            }
+                        );
+
+
+
+                    this.classList.add(
+                        "active"
+                    );
+
+
+
+                    currentCategory =
+                        this.dataset.category
+                            .toLowerCase();
+
+
+
+                    searchVideos();
+
+                }
+            );
+
+        }
+    );
+
+
+
+/* =========================
+   HTML SECURITY
+========================= */
+
+
+function escapeHTML(
+    text
+) {
+
+
+    return String(
+        text ?? ""
+    )
+
+    .replace(
+        /&/g,
+        "&amp;"
+    )
+
+    .replace(
+        /</g,
+        "&lt;"
+    )
+
+    .replace(
+        />/g,
+        "&gt;"
+    )
+
+    .replace(
+        /"/g,
+        "&quot;"
+    )
+
+    .replace(
+        /'/g,
+        "&#039;"
+    );
+
+}
+
+
+
+/* =========================
+   START
+========================= */
+
+
+loadVideos();
+
+
+</script>
+
+
+</body>
+
+</html>

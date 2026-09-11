@@ -1,0 +1,513 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0">
+
+    <title>YouMovie - Account</title>
+
+    <link
+        rel="stylesheet"
+        href="style.css">
+</head>
+
+<body>
+
+    <header>
+
+        <div
+            class="logo"
+            onclick="location.href='index.html'">
+
+            ▶ YouMovie
+
+        </div>
+
+    </header>
+
+
+    <main class="account-page">
+
+        <div class="account-logo">
+            ▶
+        </div>
+
+
+        <!-- LOGGED OUT -->
+        <div id="loginSection">
+
+            <h1>
+                Welcome to YouMovie
+            </h1>
+
+            <p class="account-subtitle">
+                Sign in to continue to YouMovie
+            </p>
+
+
+            <div class="account-form">
+
+                <label for="loginUser">
+                    Email
+                </label>
+
+                <input
+                    id="loginUser"
+                    type="email"
+                    placeholder="Enter your email"
+                    autocomplete="email">
+
+
+                <label for="loginPassword">
+                    Password
+                </label>
+
+                <input
+                    id="loginPassword"
+                    type="password"
+                    placeholder="Enter your password"
+                    autocomplete="current-password">
+
+
+                <button
+                    id="loginButton"
+                    class="account-button">
+
+                    Sign In
+
+                </button>
+
+
+                <p
+                    id="loginMessage"
+                    class="account-message">
+                </p>
+
+            </div>
+
+
+            <div class="account-divider">
+                OR
+            </div>
+
+
+            <button
+                class="create-account-button"
+                onclick="location.href='register.html'">
+
+                Create New Account
+
+            </button>
+
+        </div>
+
+
+        <!-- LOGGED IN -->
+        <div
+            id="profileSection"
+            style="display:none;">
+
+            <h1>
+                Your Account
+            </h1>
+
+            <p class="account-subtitle">
+                Welcome to YouMovie
+            </p>
+
+
+            <div
+                style="
+                    background:#202020;
+                    border:1px solid #333;
+                    border-radius:12px;
+                    padding:20px;
+                    margin-top:20px;
+                ">
+
+                <div
+                    class="account-logo"
+                    style="margin-bottom:15px;">
+
+                    👤
+
+                </div>
+
+
+                <h2
+                    id="profileUsername"
+                    style="font-size:20px; margin-bottom:8px;">
+
+                    Username
+
+                </h2>
+
+
+                <p
+                    id="profileEmail"
+                    style="
+                        color:#999;
+                        font-size:14px;
+                        word-break:break-word;
+                    ">
+
+                    Email
+
+                </p>
+
+            </div>
+
+
+            <button
+                id="logoutButton"
+                class="account-button"
+                style="margin-top:20px;">
+
+                Logout
+
+            </button>
+
+
+            <p
+                id="logoutMessage"
+                class="account-message">
+            </p>
+
+        </div>
+
+    </main>
+
+
+    <!-- BOTTOM NAVIGATION -->
+    <nav class="bottom-nav">
+
+        <div
+            class="nav-item"
+            onclick="location.href='index.html'">
+
+            <span>⌂</span>
+            Home
+
+        </div>
+
+
+        <div
+            class="nav-item"
+            onclick="location.href='shorts.html'">
+
+            <span>▣</span>
+            Shorts
+
+        </div>
+
+
+        <div
+            class="nav-item"
+            onclick="location.href='upload.html'">
+
+            <span>＋</span>
+            Create
+
+        </div>
+
+
+        <div class="nav-item">
+
+            <span>▤</span>
+            Subscriptions
+
+        </div>
+
+
+        <div
+            class="nav-item active">
+
+            <span>●</span>
+            You
+
+        </div>
+
+    </nav>
+
+
+    <!-- SUPABASE -->
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+
+
+    <script>
+
+        const SUPABASE_URL =
+            "https://ajanpecdofburxsimyjt.supabase.co";
+
+        const SUPABASE_PUBLISHABLE_KEY =
+            "sb_publishable_fysaC9xU6_NQgAsnjib_qw_BMbVRftN";
+
+        const supabaseClient =
+            window.supabase.createClient(
+                SUPABASE_URL,
+                SUPABASE_PUBLISHABLE_KEY
+            );
+
+
+        const loginSection =
+            document.getElementById("loginSection");
+
+        const profileSection =
+            document.getElementById("profileSection");
+
+
+        const loginButton =
+            document.getElementById("loginButton");
+
+
+        const loginMessage =
+            document.getElementById("loginMessage");
+
+
+        const logoutButton =
+            document.getElementById("logoutButton");
+
+
+        /*
+         * CHECK CURRENT USER
+         */
+
+        async function checkUser() {
+
+            const {
+                data,
+                error
+            } = await supabaseClient.auth.getUser();
+
+
+            if (error || !data.user) {
+
+                loginSection.style.display =
+                    "block";
+
+                profileSection.style.display =
+                    "none";
+
+                return;
+
+            }
+
+
+            showProfile(data.user);
+
+        }
+
+
+        /*
+         * SHOW PROFILE
+         */
+
+        async function showProfile(user) {
+
+            loginSection.style.display =
+                "none";
+
+            profileSection.style.display =
+                "block";
+
+
+            document.getElementById(
+                "profileEmail"
+            ).textContent =
+                user.email || "";
+
+
+            /*
+             * GET USERNAME FROM PROFILES
+             */
+
+            const {
+                data: profile,
+                error
+            } =
+            await supabaseClient
+                .from("profiles")
+                .select("username")
+                .eq("id", user.id)
+                .maybeSingle();
+
+
+            if (profile && profile.username) {
+
+                document.getElementById(
+                    "profileUsername"
+                ).textContent =
+                    "@" + profile.username;
+
+            } else {
+
+                document.getElementById(
+                    "profileUsername"
+                ).textContent =
+                    "YouMovie User";
+
+            }
+
+        }
+
+
+        /*
+         * LOGIN
+         */
+
+        loginButton.addEventListener(
+            "click",
+            async function() {
+
+                const email =
+                    document
+                    .getElementById("loginUser")
+                    .value
+                    .trim();
+
+                const password =
+                    document
+                    .getElementById("loginPassword")
+                    .value;
+
+
+                if (!email || !password) {
+
+                    loginMessage.textContent =
+                        "Please enter your email and password.";
+
+                    return;
+
+                }
+
+
+                loginButton.disabled =
+                    true;
+
+                loginButton.textContent =
+                    "Signing In...";
+
+
+                const {
+                    data,
+                    error
+                } =
+                await supabaseClient.auth
+                    .signInWithPassword({
+
+                        email: email,
+
+                        password: password
+
+                    });
+
+
+                if (error) {
+
+                    loginMessage.textContent =
+                        error.message;
+
+                    loginButton.disabled =
+                        false;
+
+                    loginButton.textContent =
+                        "Sign In";
+
+                    return;
+
+                }
+
+
+                if (data.user) {
+
+                    await showProfile(
+                        data.user
+                    );
+
+                }
+
+            }
+        );
+
+
+        /*
+         * LOGOUT
+         */
+
+        logoutButton.addEventListener(
+            "click",
+            async function() {
+
+                logoutButton.disabled =
+                    true;
+
+                logoutButton.textContent =
+                    "Logging out...";
+
+
+                const {
+                    error
+                } =
+                await supabaseClient.auth.signOut();
+
+
+                if (error) {
+
+                    document.getElementById(
+                        "logoutMessage"
+                    ).textContent =
+                        error.message;
+
+                    logoutButton.disabled =
+                        false;
+
+                    logoutButton.textContent =
+                        "Logout";
+
+                    return;
+
+                }
+
+
+                profileSection.style.display =
+                    "none";
+
+                loginSection.style.display =
+                    "block";
+
+
+                document.getElementById(
+                    "loginUser"
+                ).value = "";
+
+
+                document.getElementById(
+                    "loginPassword"
+                ).value = "";
+
+
+                loginButton.disabled =
+                    false;
+
+                loginButton.textContent =
+                    "Sign In";
+
+            }
+        );
+
+
+        /*
+         * START
+         */
+
+        checkUser();
+
+    </script>
+
+</body>
+
+</html>

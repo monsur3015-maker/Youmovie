@@ -1,0 +1,889 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0">
+
+    <title>YouMovie - Upload</title>
+
+    <link
+        rel="stylesheet"
+        href="style.css">
+</head>
+
+<body>
+
+    <header>
+
+        <div
+            class="logo"
+            onclick="location.href='index.html'">
+
+            ▶ YouMovie
+
+        </div>
+
+    </header>
+
+
+    <main class="upload-page">
+
+        <h1>Upload Video</h1>
+
+        <p class="upload-subtitle">
+            Share your video with the YouMovie community.
+        </p>
+
+
+        <!-- VIDEO -->
+
+        <div class="upload-section">
+
+            <label>
+                Video
+            </label>
+
+            <input
+                id="videoFile"
+                type="file"
+                accept="video/*">
+
+            <video
+                id="videoPreview"
+                controls
+                style="
+                    display:none;
+                    width:100%;
+                    margin-top:15px;
+                    border-radius:10px;
+                    background:#000;
+                ">
+            </video>
+
+        </div>
+
+
+        <!-- THUMBNAIL -->
+
+        <div class="upload-section">
+
+            <label>
+                Thumbnail
+            </label>
+
+            <input
+                id="thumbnailFile"
+                type="file"
+                accept="image/*">
+
+            <img
+                id="thumbnailPreview"
+                alt="Thumbnail Preview"
+                style="
+                    display:none;
+                    width:100%;
+                    margin-top:15px;
+                    border-radius:10px;
+                ">
+
+        </div>
+
+
+        <!-- TITLE -->
+
+        <div class="upload-section">
+
+            <label>
+                Title
+            </label>
+
+            <input
+                id="videoTitle"
+                type="text"
+                placeholder="Enter your video title"
+                maxlength="100">
+
+        </div>
+
+
+        <!-- DESCRIPTION -->
+
+        <div class="upload-section">
+
+            <label>
+                Description
+            </label>
+
+            <textarea
+                id="videoDescription"
+                placeholder="Tell viewers about your video..."
+                maxlength="5000"></textarea>
+
+        </div>
+
+
+        <!-- CATEGORY -->
+
+        <div class="upload-section">
+
+            <label>
+                Category
+            </label>
+
+            <select id="videoCategory">
+
+                <option value="">
+                    Select a category
+                </option>
+
+                <option value="music">
+                    Music
+                </option>
+
+                <option value="gaming">
+                    Gaming
+                </option>
+
+                <option value="education">
+                    Education
+                </option>
+
+                <option value="comedy">
+                    Comedy
+                </option>
+
+                <option value="sports">
+                    Sports
+                </option>
+
+                <option value="news">
+                    News
+                </option>
+
+                <option value="technology">
+                    Technology
+                </option>
+
+                <option value="entertainment">
+                    Entertainment
+                </option>
+
+            </select>
+
+        </div>
+
+
+        <!-- VISIBILITY -->
+
+        <div class="upload-section">
+
+            <label>
+                Visibility
+            </label>
+
+            <div class="visibility-options">
+
+                <label class="visibility-option">
+
+                    <input
+                        type="radio"
+                        name="visibility"
+                        value="public"
+                        checked>
+
+                    <span>
+
+                        <strong>
+                            Public
+                        </strong>
+
+                        <br>
+
+                        <small>
+                            Anyone can watch this video.
+                        </small>
+
+                    </span>
+
+                </label>
+
+
+                <label class="visibility-option">
+
+                    <input
+                        type="radio"
+                        name="visibility"
+                        value="unlisted">
+
+                    <span>
+
+                        <strong>
+                            Unlisted
+                        </strong>
+
+                        <br>
+
+                        <small>
+                            Only people with the link can watch.
+                        </small>
+
+                    </span>
+
+                </label>
+
+
+                <label class="visibility-option">
+
+                    <input
+                        type="radio"
+                        name="visibility"
+                        value="private">
+
+                    <span>
+
+                        <strong>
+                            Private
+                        </strong>
+
+                        <br>
+
+                        <small>
+                            Only you can watch this video.
+                        </small>
+
+                    </span>
+
+                </label>
+
+            </div>
+
+        </div>
+
+
+        <!-- PUBLISH -->
+
+        <button
+            id="publishButton"
+            class="publish-button">
+
+            Publish Video
+
+        </button>
+
+
+        <p
+            id="uploadMessage"
+            class="upload-message">
+        </p>
+
+
+        <!-- PREVIEW -->
+
+        <div
+            id="publishPreview"
+            class="publish-preview"
+            style="display:none;">
+
+            <img
+                id="publishPreviewImage"
+                src=""
+                alt="Video Thumbnail">
+
+            <div class="publish-preview-info">
+
+                <h3 id="publishPreviewTitle">
+                    Video Title
+                </h3>
+
+                <p>
+                    YouMovie • Just now
+                </p>
+
+                <p id="publishPreviewCategory">
+                    Category
+                </p>
+
+            </div>
+
+        </div>
+
+    </main>
+
+
+    <!-- BOTTOM NAVIGATION -->
+
+    <nav class="bottom-nav">
+
+        <div
+            class="nav-item"
+            onclick="location.href='index.html'">
+
+            <span>⌂</span>
+
+            Home
+
+        </div>
+
+
+        <div
+            class="nav-item"
+            onclick="location.href='shorts.html'">
+
+            <span>▣</span>
+
+            Shorts
+
+        </div>
+
+
+        <div
+            class="nav-item active">
+
+            <span>＋</span>
+
+            Create
+
+        </div>
+
+
+        <div class="nav-item">
+
+            <span>▤</span>
+
+            Subscriptions
+
+        </div>
+
+
+        <div
+            class="nav-item"
+            onclick="location.href='account.html'">
+
+            <span>●</span>
+
+            You
+
+        </div>
+
+    </nav>
+
+
+    <!-- SUPABASE -->
+
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+
+
+    <script>
+
+        const SUPABASE_URL =
+            "https://ajanpecdofburxsimyjt.supabase.co";
+
+        const SUPABASE_PUBLISHABLE_KEY =
+            "sb_publishable_fysaC9xU6_NQgAsnjib_qw_BMbVRftN";
+
+
+        const supabaseClient =
+            window.supabase.createClient(
+                SUPABASE_URL,
+                SUPABASE_PUBLISHABLE_KEY
+            );
+
+
+        const videoFile =
+            document.getElementById("videoFile");
+
+        const thumbnailFile =
+            document.getElementById("thumbnailFile");
+
+        const videoPreview =
+            document.getElementById("videoPreview");
+
+        const thumbnailPreview =
+            document.getElementById("thumbnailPreview");
+
+        const publishButton =
+            document.getElementById("publishButton");
+
+        const uploadMessage =
+            document.getElementById("uploadMessage");
+
+
+        /*
+         * VIDEO PREVIEW
+         */
+
+        videoFile.addEventListener(
+            "change",
+            function () {
+
+                const file =
+                    this.files[0];
+
+                if (!file) {
+
+                    videoPreview.style.display =
+                        "none";
+
+                    return;
+                }
+
+                videoPreview.src =
+                    URL.createObjectURL(file);
+
+                videoPreview.style.display =
+                    "block";
+
+            }
+        );
+
+
+        /*
+         * THUMBNAIL PREVIEW
+         */
+
+        thumbnailFile.addEventListener(
+            "change",
+            function () {
+
+                const file =
+                    this.files[0];
+
+                if (!file) {
+
+                    thumbnailPreview.style.display =
+                        "none";
+
+                    return;
+                }
+
+                thumbnailPreview.src =
+                    URL.createObjectURL(file);
+
+                thumbnailPreview.style.display =
+                    "block";
+
+
+                document.getElementById(
+                    "publishPreviewImage"
+                ).src =
+                    thumbnailPreview.src;
+
+            }
+        );
+
+
+        /*
+         * TITLE PREVIEW
+         */
+
+        document.getElementById(
+            "videoTitle"
+        ).addEventListener(
+            "input",
+            function () {
+
+                document.getElementById(
+                    "publishPreviewTitle"
+                ).textContent =
+                    this.value.trim() ||
+                    "Video Title";
+
+            }
+        );
+
+
+        /*
+         * CATEGORY PREVIEW
+         */
+
+        document.getElementById(
+            "videoCategory"
+        ).addEventListener(
+            "change",
+            function () {
+
+                document.getElementById(
+                    "publishPreviewCategory"
+                ).textContent =
+                    this.value ||
+                    "Category";
+
+            }
+        );
+
+
+        /*
+         * PUBLISH VIDEO
+         */
+
+        publishButton.addEventListener(
+            "click",
+            async function () {
+
+                const video =
+                    videoFile.files[0];
+
+                const thumbnail =
+                    thumbnailFile.files[0];
+
+                const title =
+                    document
+                    .getElementById("videoTitle")
+                    .value
+                    .trim();
+
+                const description =
+                    document
+                    .getElementById("videoDescription")
+                    .value
+                    .trim();
+
+                const category =
+                    document
+                    .getElementById("videoCategory")
+                    .value;
+
+                const visibilityElement =
+                    document.querySelector(
+                        'input[name="visibility"]:checked'
+                    );
+
+                const visibility =
+                    visibilityElement
+                    ? visibilityElement.value
+                    : "public";
+
+
+                /*
+                 * VALIDATION
+                 */
+
+                if (!video) {
+
+                    uploadMessage.textContent =
+                        "Please select a video.";
+
+                    return;
+                }
+
+
+                if (!title) {
+
+                    uploadMessage.textContent =
+                        "Please enter a video title.";
+
+                    return;
+                }
+
+
+                if (!category) {
+
+                    uploadMessage.textContent =
+                        "Please select a category.";
+
+                    return;
+                }
+
+
+                /*
+                 * CHECK LOGIN
+                 */
+
+                const {
+                    data: userData,
+                    error: userError
+                } =
+                await supabaseClient.auth.getUser();
+
+
+                if (
+                    userError ||
+                    !userData.user
+                ) {
+
+                    uploadMessage.textContent =
+                        "Please login before uploading.";
+
+                    return;
+                }
+
+
+                const user =
+                    userData.user;
+
+
+                /*
+                 * START
+                 */
+
+                publishButton.disabled =
+                    true;
+
+                publishButton.textContent =
+                    "Uploading...";
+
+                uploadMessage.textContent =
+                    "Uploading your video. Please wait...";
+
+
+                try {
+
+
+                    /*
+                     * CREATE UNIQUE FILE NAMES
+                     */
+
+                    const timestamp =
+                        Date.now();
+
+
+                    const videoExtension =
+                        video.name
+                        .split(".")
+                        .pop()
+                        .toLowerCase();
+
+
+                    const videoPath =
+                        user.id +
+                        "/" +
+                        timestamp +
+                        "." +
+                        videoExtension;
+
+
+                    /*
+                     * UPLOAD VIDEO
+                     */
+
+                    const {
+                        error: videoUploadError
+                    } =
+                    await supabaseClient
+                        .storage
+                        .from("videos")
+                        .upload(
+                            videoPath,
+                            video,
+                            {
+                                cacheControl: "3600",
+                                upsert: false
+                            }
+                        );
+
+
+                    if (videoUploadError) {
+
+                        throw videoUploadError;
+
+                    }
+
+
+                    /*
+                     * GET VIDEO URL
+                     */
+
+                    const {
+                        data: videoURLData
+                    } =
+                    supabaseClient
+                        .storage
+                        .from("videos")
+                        .getPublicUrl(
+                            videoPath
+                        );
+
+
+                    const videoURL =
+                        videoURLData.publicUrl;
+
+
+                    /*
+                     * THUMBNAIL
+                     */
+
+                    let thumbnailURL =
+                        null;
+
+
+                    if (thumbnail) {
+
+                        const thumbnailExtension =
+                            thumbnail.name
+                            .split(".")
+                            .pop()
+                            .toLowerCase();
+
+
+                        const thumbnailPath =
+                            user.id +
+                            "/" +
+                            timestamp +
+                            "." +
+                            thumbnailExtension;
+
+
+                        const {
+                            error:
+                            thumbnailUploadError
+                        } =
+                        await supabaseClient
+                            .storage
+                            .from("thumbnails")
+                            .upload(
+                                thumbnailPath,
+                                thumbnail,
+                                {
+                                    cacheControl: "3600",
+                                    upsert: false
+                                }
+                            );
+
+
+                        if (
+                            thumbnailUploadError
+                        ) {
+
+                            throw thumbnailUploadError;
+
+                        }
+
+
+                        const {
+                            data:
+                            thumbnailURLData
+                        } =
+                        supabaseClient
+                            .storage
+                            .from("thumbnails")
+                            .getPublicUrl(
+                                thumbnailPath
+                            );
+
+
+                        thumbnailURL =
+                            thumbnailURLData.publicUrl;
+
+                    }
+
+
+                    /*
+                     * SAVE VIDEO DATA
+                     */
+
+                    const {
+                        error: databaseError
+                    } =
+                    await supabaseClient
+                        .from("videos")
+                        .insert({
+
+                            user_id:
+                                user.id,
+
+                            title:
+                                title,
+
+                            description:
+                                description,
+
+                            category:
+                                category,
+
+                            video_url:
+                                videoURL,
+
+                            thumbnail_url:
+                                thumbnailURL,
+
+                            visibility:
+                                visibility
+
+                        });
+
+
+                    if (databaseError) {
+
+                        throw databaseError;
+
+                    }
+
+
+                    /*
+                     * SUCCESS
+                     */
+
+                    uploadMessage.textContent =
+                        "Video published successfully!";
+
+                    publishButton.textContent =
+                        "Published ✓";
+
+
+                    document.getElementById(
+                        "publishPreview"
+                    ).style.display =
+                        "block";
+
+
+                    /*
+                     * CLEAR FORM
+                     */
+
+                    videoFile.value = "";
+
+                    thumbnailFile.value = "";
+
+                    document.getElementById(
+                        "videoTitle"
+                    ).value = "";
+
+                    document.getElementById(
+                        "videoDescription"
+                    ).value = "";
+
+                    document.getElementById(
+                        "videoCategory"
+                    ).value = "";
+
+
+                    videoPreview.style.display =
+                        "none";
+
+                    thumbnailPreview.style.display =
+                        "none";
+
+
+                } catch (error) {
+
+                    console.error(
+                        "Upload error:",
+                        error
+                    );
+
+
+                    uploadMessage.textContent =
+                        "Upload failed: " +
+                        error.message;
+
+
+                    publishButton.disabled =
+                        false;
+
+                    publishButton.textContent =
+                        "Publish Video";
+
+                }
+
+            }
+        );
+
+    </script>
+
+</body>
+
+</html>
